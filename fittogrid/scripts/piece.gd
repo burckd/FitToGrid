@@ -5,7 +5,7 @@ var screen_size_offset := Vector2(126, 126)
 var shape_data := []
 var cells := []
 
-var is_dragging : bool
+var is_dragging := false
 var drag_offset : Vector2
 var start_position : Vector2
 
