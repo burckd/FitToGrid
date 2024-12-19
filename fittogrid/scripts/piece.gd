@@ -1,12 +1,13 @@
 extends Node2D
 
 var screen_size
-
+var screen_size_offset := Vector2(126, 126)
 var shape_data := []
 var cells := []
 
 var is_dragging : bool
 var drag_offset : Vector2
+var start_position : Vector2
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -14,7 +15,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	position.clamp(Vector2.ZERO, screen_size)
+	global_position = global_position.clamp(Vector2.ZERO, (screen_size - screen_size_offset))
 
 # called in spawner
 func init_shape(shape: Array, cell_size: int):
@@ -48,3 +49,6 @@ func drag_piece(relative_motion: Vector2):
 func stop_dragging():
 	is_dragging = false
 	
+func return_spawn_pos():
+	if is_dragging == false:
+		position = start_position
