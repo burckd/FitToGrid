@@ -13,4 +13,4 @@ func set_cell_color (state):
 		color_rect.Color.GOLD
 
 func _on_cell_area_input_event(viewport, event, shape_idx):
-	input_taken.emit()
+	input_taken.emit(viewport, event, shape_idx)
