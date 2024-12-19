@@ -9,11 +9,11 @@
 script = ExtResource("1_povau")
 
 [node name="GridManager" type="Node2D" parent="."]
-position = Vector2(84, 84)
+position = Vector2(121, 109)
 script = ExtResource("2_pfn10")
 
 [node name="SpawnManager" type="Node2D" parent="."]
-position = Vector2(640, 63)
+position = Vector2(650, 107)
 script = ExtResource("3_tw5mj")
 
 [node name="piece_data" type="Node" parent="SpawnManager"]
