@@ -11,10 +11,6 @@ var cell_size = Global.CELL_SIZE
 func _ready():
 	init_grid(grid_size, cell_size)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
-
 func init_grid(grid_size: int, cell_size: int):
 	# 2d array for cells 
 	# list of lists

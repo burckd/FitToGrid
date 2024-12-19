@@ -11,6 +11,7 @@ var start_position : Vector2
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	start_position = global_position
 	screen_size = get_viewport_rect().size
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -35,20 +36,21 @@ func _on_cell_input_event(viewport, event, shape_idx):
 			start_dragging(event.position)
 		elif event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
 			stop_dragging()
+			return_spawn_pos()
 	elif event is InputEventMouseMotion and is_dragging:
-		drag_piece(event.relative)
+		snap_to_mouse()
 
 func start_dragging(mouse_pos: Vector2):
-	print("testo")
 	is_dragging = true
 	drag_offset = mouse_pos - global_position
+	snap_to_mouse()
 
-func drag_piece(relative_motion: Vector2):
-	position += relative_motion
+func snap_to_mouse():
+	global_position = get_global_mouse_position() - drag_offset
 
 func stop_dragging():
 	is_dragging = false
-	
+
 func return_spawn_pos():
-	if is_dragging == false:
-		position = start_position
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "global_position", start_position, 0.2)
