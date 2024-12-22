@@ -11,6 +11,8 @@ func set_cell_color (state):
 		color_rect.Color.SLATE_GRAY
 	elif state == 2:
 		color_rect.Color.GOLD
+	elif state == 3:
+		color_rect.Color.RED
 
 func _on_cell_area_input_event(viewport, event, shape_idx):
 	input_taken.emit(viewport, event, shape_idx)

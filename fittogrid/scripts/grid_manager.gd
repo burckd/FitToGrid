@@ -32,18 +32,3 @@ func init_grid(grid_size: int, cell_size: int):
 			grid_status[pos] = false
 			#store cell reference
 			cells[x].append(cell_instance)
-
-func is_cell_occupied(x: int, y: int) -> bool:
-	# check grid bounds
-	if x < 0 or x >= grid_size or y < 0 or y >= grid_size:
-		return true
-	return grid_status[Vector2(x,y)]
-
-func set_cell_occupancy(x: int, y: int, occupied: bool):
-	if x < 0 or x >= grid_size or y < 0 or y >= grid_size:
-		return
-	grid_status[Vector2(x, y)] = occupied
-	cells[x][y].set_filled(occupied)
-
-func get_world_position_from_grid(x: int, y: int) -> Vector2:
-	return Vector2(x * cell_size, y * cell_size)
