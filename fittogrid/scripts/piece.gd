@@ -53,4 +53,4 @@ func stop_dragging():
 
 func return_spawn_pos():
 	var tween = get_tree().create_tween()
-	tween.tween_property(self, "global_position", start_position, 0.2)
+	tween.tween_property(self, "global_position", start_position, 0.2).set_trans(Tween.TRANS_SINE)
