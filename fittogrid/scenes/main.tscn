@@ -10,6 +10,7 @@ script = ExtResource("1_fkvvk")
 [node name="HUD" parent="." instance=ExtResource("1_3gau3")]
 
 [node name="GamePlay" parent="." instance=ExtResource("2_3jxuv")]
+unique_name_in_owner = true
 visible = false
 
 [connection signal="start_game" from="HUD" to="." method="new_game"]

@@ -8,10 +8,11 @@ var spawn_offset = Global.SPAWN_OFFSET
 const MAX_PIECE_HEIGHT = 3 
 const PIECE_COUNT = 3
 
+signal active_piece_information(piece)
+
 func _ready():
 	randomize()
 	spawn_pieces()
-
 
 func spawn_pieces():
 	var starting_y = spawn_offset.y # center of spawnable area
@@ -29,8 +30,14 @@ func spawn_single_piece(position: Vector2):
 	var rotations = piece_data.pieces[chosen_type]
 	var chosen_piece_rotation_data = rotations[randi_range(0, rotations.size() - 1)]
 	
+	var game_play = "/root/Main/GameManager"  
+	
 	# instantiate piece and initiate it with shape
 	var piece_instance = preload("res://scenes/piece.tscn").instantiate()
 	piece_instance.init_shape(chosen_piece_rotation_data,cell_size)
 	piece_instance.position = position
 	add_child(piece_instance)
+	piece_instance.piece_released.connect(_piece_information_give)
+
+func _piece_information_give(piece):
+	active_piece_information.emit(piece)

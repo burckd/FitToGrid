@@ -16,3 +16,5 @@ script = ExtResource("3_tw5mj")
 
 [node name="piece_data" type="Node" parent="SpawnManager"]
 script = ExtResource("4_ygsvh")
+
+[connection signal="active_piece_information" from="SpawnManager" to="." method="_on_spawn_manager_active_piece_information"]

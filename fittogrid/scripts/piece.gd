@@ -1,5 +1,7 @@
 extends Node2D
 
+signal piece_released(piece)
+
 var screen_size
 var screen_size_offset := Vector2(126, 126)
 var shape_data := []
@@ -33,7 +35,7 @@ func _on_cell_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			start_dragging(event.position)
-		elif event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
+		elif is_dragging and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
 			stop_dragging()
 
 func start_dragging(mouse_pos: Vector2):
@@ -45,6 +47,7 @@ func snap_to_mouse():
 
 func stop_dragging():
 	is_dragging = false
+	emit_signal("piece_released", self)
 
 func return_spawn_pos():
 	var tween = get_tree().create_tween()
@@ -54,7 +57,6 @@ func _input(event):
 	if is_dragging == true:
 		snap_to_mouse()
 	elif is_dragging != true:
-		stop_dragging()
 		return_spawn_pos()
 	elif event is InputEventMouseMotion and is_dragging:
 		snap_to_mouse()
