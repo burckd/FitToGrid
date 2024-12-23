@@ -1,6 +1,7 @@
 extends Node2D
 
 signal piece_released(piece)
+signal piece_hovered(piece)
 
 var piece_number
 
@@ -39,6 +40,7 @@ func _on_cell_input_event(viewport, event, shape_idx):
 			start_dragging(event.position)
 		elif is_dragging and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
 			stop_dragging()
+			emit_signal("piece_hovered", null)
 
 func start_dragging(mouse_pos: Vector2):
 	is_dragging = true
@@ -58,6 +60,7 @@ func return_spawn_pos():
 func _input(event):
 	if is_dragging == true:
 		snap_to_mouse()
+		piece_hovered.emit(self)
 	elif is_dragging != true:
 		return_spawn_pos()
 	elif event is InputEventMouseMotion and is_dragging:

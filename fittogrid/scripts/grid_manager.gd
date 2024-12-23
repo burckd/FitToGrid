@@ -7,6 +7,8 @@ var cells := []
 var cell_size = Global.CELL_SIZE
 var grid_offset = Global.GRID_OFFSET
 
+var highlighted_cells = []
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	init_grid(grid_size, cell_size)
@@ -33,10 +35,7 @@ func init_grid(grid_size: int, cell_size: int):
 			cells[x].append(cell_instance)
 
 func validate_placement(piece: Node2D) -> bool:
-	print("[GRID] validate_placement called for piece:", piece.name)
-	print("[GRID] piece global_position:", piece.global_position)
 	var shape_data = piece.shape_data
-	
 	var global_piece_pos = piece.global_position
 	for point in shape_data:
 		# For each cell in the piece shape, get the cell's world position
@@ -90,4 +89,31 @@ func mark_cells_occupied(piece: Node2D):
 		grid_status[key] = true
 		
 		if cells[grid_x][grid_y]:
-			cells[grid_x][grid_y].set_cell_color(1)
+			cells[grid_x][grid_y].set_state(1)
+
+func highlight_cells(piece: Node2D):
+	clear_highlight()
+	var shape_data = piece.shape_data
+	var global_position = piece.global_position
+	if validate_placement(piece) == true:
+		for point in shape_data:
+			# For each cell in the piece shape, get the cell's world position
+			var cell_world_x = global_position.x + (point.x * cell_size)
+			var cell_world_y = global_position.y + (point.y * cell_size)
+			# Convert that to grid coordinates
+			var grid_x = int((cell_world_x - grid_offset) / cell_size)
+			var grid_y = int((cell_world_y - grid_offset) / cell_size)
+			# Check boundaries
+			if grid_x >= 0 and grid_x < grid_size and grid_y >= 0 and grid_y < grid_size:
+				var cell = cells[grid_x][grid_y]
+				if cell:
+					if grid_status[Vector2(grid_x, grid_y)]:
+						cell.set_highlight(true)
+					else:
+						cell.set_highlight(true)
+					highlighted_cells.append(cell)
+
+func clear_highlight():
+	for cell in highlighted_cells:
+		cell.set_highlight(false)
+	highlighted_cells.clear()

@@ -15,7 +15,6 @@ func _on_spawn_manager_active_piece_information(piece):
 func attempt_place_piece(piece: Node2D):
 	var piece_number
 	var is_valid = grid_manager.validate_placement(piece)
-	print("[GAMEPLAY] Placement valid?", is_valid)
 	piece_number = piece.piece_number
 	if is_valid:
 		grid_manager.snap_piece_to_grid(piece)
@@ -24,3 +23,9 @@ func attempt_place_piece(piece: Node2D):
 		spawn_manager.spawn_desired_piece(piece_number)
 	else:
 		piece.return_spawn_pos()
+
+func _on_spawn_manager_hovered_piece_information(piece):
+	if piece == null:
+		grid_manager.clear_highlight()
+	else:
+		grid_manager.highlight_cells(piece)

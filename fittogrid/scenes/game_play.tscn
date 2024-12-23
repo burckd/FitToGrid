@@ -18,3 +18,4 @@ script = ExtResource("3_tw5mj")
 script = ExtResource("4_ygsvh")
 
 [connection signal="active_piece_information" from="SpawnManager" to="." method="_on_spawn_manager_active_piece_information"]
+[connection signal="hovered_piece_information" from="SpawnManager" to="." method="_on_spawn_manager_hovered_piece_information"]

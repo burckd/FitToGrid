@@ -9,6 +9,7 @@ const MAX_PIECE_HEIGHT = 3
 const PIECE_COUNT = 3
 
 signal active_piece_information(piece)
+signal hovered_piece_information(piece)
 
 func _ready():
 	randomize()
@@ -46,7 +47,11 @@ func spawn_single_piece(position: Vector2, piece_number):
 	piece_instance.position = position
 	add_child(piece_instance)
 	piece_instance.piece_released.connect(_piece_information_give)
+	piece_instance.piece_hovered.connect(_piece_hover_information_give)
 	piece_instance.piece_number = piece_number
 
 func _piece_information_give(piece):
 	active_piece_information.emit(piece)
+
+func _piece_hover_information_give(piece):
+	hovered_piece_information.emit(piece)
