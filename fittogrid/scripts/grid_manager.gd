@@ -31,3 +31,63 @@ func init_grid(grid_size: int, cell_size: int):
 			grid_status[pos] = false
 			#store cell reference
 			cells[x].append(cell_instance)
+
+func validate_placement(piece: Node2D) -> bool:
+	print("[GRID] validate_placement called for piece:", piece.name)
+	print("[GRID] piece global_position:", piece.global_position)
+	var shape_data = piece.shape_data
+	
+	var global_piece_pos = piece.global_position
+	for point in shape_data:
+		# For each cell in the piece shape, get the cell's world position
+		var cell_world_x = global_piece_pos.x + (point.x * cell_size)
+		var cell_world_y = global_piece_pos.y + (point.y * cell_size)
+		# Convert that to grid coordinates
+		var grid_x = int((cell_world_x - grid_offset) / cell_size)
+		var grid_y = int((cell_world_y - grid_offset) / cell_size)
+		# Check boundaries
+		if grid_x < 0 or grid_x >= grid_size or grid_y < 0 or grid_y >= grid_size:
+			return false
+		# Check occupancy
+		if grid_status.has(Vector2(grid_x, grid_y)):
+			if grid_status[Vector2(grid_x, grid_y)] == true:
+				return false
+		else:
+			return false
+	return true
+
+func snap_piece_to_grid(piece: Node2D):
+	var shape_data = piece.shape_data
+	var cell_size = Global.CELL_SIZE
+	# For a lot of puzzle games, you pick an "anchor cell" in shape_data
+	# (often the top-left or the first in the array).
+	var anchor = shape_data[0]
+	# anchor’s world position
+	var anchor_world_x = piece.global_position.x + (anchor.x * cell_size)
+	var anchor_world_y = piece.global_position.y + (anchor.y * cell_size)
+	# convert anchor world to grid coords
+	var grid_x = int((anchor_world_x - Global.GRID_OFFSET) / cell_size)
+	var grid_y = int((anchor_world_y - Global.GRID_OFFSET) / cell_size)
+	# Then figure out the pixel position that that grid cell corresponds to
+	var final_anchor_pixel_x = grid_x * cell_size + Global.GRID_OFFSET
+	var final_anchor_pixel_y = grid_y * cell_size + Global.GRID_OFFSET
+	# The offset from the anchor to the piece’s top-left
+	var delta = Vector2(final_anchor_pixel_x, final_anchor_pixel_y) - Vector2(anchor_world_x, anchor_world_y)
+	# Now move the piece by delta
+	piece.global_position += delta
+
+func mark_cells_occupied(piece: Node2D):
+	var shape_data = piece.shape_data
+	var cell_size = Global.CELL_SIZE
+	
+	for point in shape_data:
+		var cell_world_x = piece.global_position.x + (point.x * cell_size)
+		var cell_world_y = piece.global_position.y + (point.y * cell_size)
+		# Convert to grid coords
+		var grid_x = int((cell_world_x - Global.GRID_OFFSET) / cell_size)
+		var grid_y = int((cell_world_y - Global.GRID_OFFSET) / cell_size)
+		var key = Vector2(grid_x, grid_y)
+		grid_status[key] = true
+		
+		if cells[grid_x][grid_y]:
+			cells[grid_x][grid_y].set_cell_color(1)

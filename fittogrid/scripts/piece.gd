@@ -2,6 +2,8 @@ extends Node2D
 
 signal piece_released(piece)
 
+var piece_number
+
 var screen_size
 var screen_size_offset := Vector2(126, 126)
 var shape_data := []
