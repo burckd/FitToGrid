@@ -1,6 +1,8 @@
 extends Node2D
 
 var cell_size = Global.CELL_SIZE
+var spawn_offset = Global.SPAWN_OFFSET
+
 @onready var piece_data = $piece_data
 
 const MAX_PIECE_HEIGHT = 3 
@@ -12,14 +14,15 @@ func _ready():
 
 
 func spawn_pieces():
-	var starting_y = 0 # center of spawnable area
+	var starting_y = spawn_offset.y # center of spawnable area
+	var starting_x = spawn_offset.x # spawnable area x
 	
 	for i in range(PIECE_COUNT):
 		var spawn_y = starting_y + i * (MAX_PIECE_HEIGHT + 1) * cell_size
-		spawn_single_piece(Vector2(0, spawn_y))
+		var spawn_x = starting_x
+		spawn_single_piece(Vector2(spawn_x, spawn_y))
 
 func spawn_single_piece(position: Vector2):
-	
 	# choose random piece and rotation
 	var piece_types = piece_data.pieces.keys()
 	var chosen_type = piece_types[randi_range(0, piece_types.size() - 1)]
