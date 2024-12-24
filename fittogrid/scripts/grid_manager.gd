@@ -103,14 +103,15 @@ func highlight_cells(piece: Node2D):
 			# Convert that to grid coordinates
 			var grid_x = int((cell_world_x - grid_offset) / cell_size)
 			var grid_y = int((cell_world_y - grid_offset) / cell_size)
+			var grid_pos = Vector2(grid_x, grid_y)
 			# Check boundaries
 			if grid_x >= 0 and grid_x < grid_size and grid_y >= 0 and grid_y < grid_size:
 				var cell = cells[grid_x][grid_y]
 				if cell:
-					if grid_status[Vector2(grid_x, grid_y)]:
-						cell.set_highlight(true)
+					if grid_status.get(grid_pos, false):
+						cell.set_highlight(true, true)
 					else:
-						cell.set_highlight(true)
+						cell.set_highlight(true, false)
 					highlighted_cells.append(cell)
 
 func clear_highlight():

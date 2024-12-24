@@ -11,13 +11,17 @@ signal input_taken
 
 var state = 0  # 0 = empty, 1 = occupied
 var is_highlighted = false
+var is_invalid = false
 
 func _ready():
 	update_color()
 
 func update_color():
 	if is_highlighted:
-		color_rect.color = highlight_color if state == 0 else invalid_color
+		if is_invalid:
+			color_rect.color = invalid_color
+		else:
+			color_rect.color = highlight_color
 	else:
 		color_rect.color = default_color if state == 0 else occupied_color
 
@@ -25,8 +29,9 @@ func set_state(new_state: int):
 	state = new_state
 	update_color()
 
-func set_highlight(highlight: bool):
+func set_highlight(highlight: bool, invalid: bool = false):
 	is_highlighted = highlight
+	is_invalid = invalid
 	update_color()
 
 func _on_cell_area_input_event(viewport, event, shape_idx):
