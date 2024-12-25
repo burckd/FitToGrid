@@ -55,16 +55,14 @@ func snap_piece_to_grid(piece: Node2D):
 	var anchor = shape_data[0]
 	var anchor_world_pos = piece.global_position + anchor * cell_size
 	var grid_pos = world_to_grid(anchor_world_pos)
-	if grid_pos.x >= 0 and grid_pos.x < grid_size and grid_pos.y >= 0 and grid_pos.y < grid_size:
-		var final_anchor_pixel_pos = grid_to_world(grid_pos)
-		var delta = final_anchor_pixel_pos - anchor_world_pos
-		piece.global_position += delta
+	var final_anchor_pixel_pos = grid_to_world(grid_pos)
+	var delta = final_anchor_pixel_pos - anchor_world_pos
+	piece.global_position += delta
 
 func mark_cells_occupied(piece: Node2D):
 	var cells_to_mark = get_cells_for_piece(piece)
 	for cell in cells_to_mark:
 		var grid_pos = world_to_grid(cell.position)
-		grid_status[grid_pos] = true
 		if grid_pos.x >= 0 and grid_pos.x < grid_size and grid_pos.y >= 0 and grid_pos.y < grid_size:
 			grid_status[grid_pos] = true
 			cell.set_state(1)
@@ -86,8 +84,10 @@ func get_cells_for_piece(piece: Node2D) -> Array:
 	return cells_list
 
 func clear_highlight():
+	if highlighted_cells.size() == 0:
+		return
 	for cell in highlighted_cells:
-		cell.set_highlight(false)
+		cell.set_highlight(false, false)
 	highlighted_cells.clear()
 
 func world_to_grid(world_pos: Vector2) -> Vector2:
@@ -101,3 +101,35 @@ func grid_to_world(grid_pos: Vector2) -> Vector2:
 		grid_pos.x * cell_size + grid_offset,
 		grid_pos.y * cell_size + grid_offset
 	)
+
+func check_and_clear_lines():
+	var cleared_lines = []
+	# Check rows
+	for y in range(grid_size):
+		var is_row_filled = true
+		for x in range(grid_size):
+			if not grid_status.get(Vector2(x, y), false):
+				is_row_filled = false
+				break
+		if is_row_filled:
+			cleared_lines.append(y)
+	# Check columns
+	for x in range(grid_size):
+		var is_col_filled = true
+		for y in range(grid_size):
+			if not grid_status.get(Vector2(x, y), false):
+				is_col_filled = false
+				break
+		if is_col_filled:
+			cleared_lines.append(x + grid_size)  # Offset column indices to differentiate
+	# Clear lines
+	for line in cleared_lines:
+		if line < grid_size:  # Row
+			for x in range(grid_size):
+				grid_status[Vector2(x, line)] = false
+				cells[x][line].set_state(0)
+		else:  # Column
+			for y in range(grid_size):
+				grid_status[Vector2(line - grid_size, y)] = false
+				cells[line - grid_size][y].set_state(0)
+	return cleared_lines
