@@ -3,19 +3,17 @@ extends Node2D
 @export var grid_size := 10
 @export var cell_scene: PackedScene 
 
-var grid_status := {}
-var cells := []
 var cell_size = Global.CELL_SIZE
 var grid_offset = Global.GRID_OFFSET
+
+var grid_status := {}
+var cells := []
 
 var highlighted_cells := []
 
 var last_placed_piece: Node2D = null
 var last_piece_cells: Array = []
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	init_grid(grid_size, cell_size)
 
 func init_grid(grid_size: int, cell_size: int):
 	# 2d array for cells 
@@ -37,6 +35,11 @@ func init_grid(grid_size: int, cell_size: int):
 			grid_status[pos] = false
 			#store cell reference
 			cells[x].append(cell_instance)
+
+func clear_grid():
+	grid_status.clear()
+	cells.clear()
+	last_piece_cells.clear()
 
 func validate_placement(piece: Node2D) -> bool:
 	var shape_data = piece.shape_data

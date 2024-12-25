@@ -6,23 +6,28 @@ extends Node2D
 var active_piece
 var active_pieces := []
 
-enum GameState { PLAYING, GAME_OVER, PAUSE }
-var current_state: GameState = GameState.PLAYING
-
-func _ready():
-	pass
+signal game_overed
 
 func start_game():
-	GameState.PLAYING
+	var grid_size = grid_manager.grid_size
+	var cell_size = Global.CELL_SIZE
+	for piece in active_pieces:
+		piece.queue_free()
+	active_pieces.clear()
+	grid_manager.init_grid(grid_size, cell_size)
 	spawn_manager.spawn_pieces()
 	active_pieces = spawn_manager.first_active_pieces
 
-func check_game_over():
+func game_over():
+	game_overed.emit()
+	grid_manager.clear_grid()
+
+func check_game_over() -> bool:
 	var can_place_any_piece = false
 	for piece in active_pieces:
 		if grid_manager.can_place_piece(piece.shape_data):
 			return false
-	GameState.GAME_OVER
+	game_over()
 	return true
 
 func attempt_place_piece(piece: Node2D):

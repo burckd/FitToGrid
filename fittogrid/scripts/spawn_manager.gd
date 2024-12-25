@@ -5,8 +5,6 @@ var spawn_offset = Global.SPAWN_OFFSET
 
 @onready var piece_data = $piece_data
 
-var game_play = "/root/Main/GameManager"  
-
 const MAX_PIECE_HEIGHT = 3 
 const PIECE_COUNT = 3
 
@@ -27,7 +25,6 @@ func spawn_pieces():
 		var spawn_x = starting_x
 		var piece = spawn_single_piece(Vector2(spawn_x, spawn_y), i)
 		first_active_pieces.append(piece)
-		
 
 func spawn_desired_piece(number) -> Node2D:
 	var starting_y = spawn_offset.y # center of spawnable area

@@ -28,4 +28,23 @@ offset_bottom = 541.0
 theme_override_font_sizes/font_size = 42
 text = "play"
 
+[node name="RestartButton" type="Button" parent="."]
+visible = false
+offset_left = 523.0
+offset_top = 472.0
+offset_right = 706.0
+offset_bottom = 531.0
+theme_override_font_sizes/font_size = 37
+text = "restart"
+
+[node name="Label2" type="Label" parent="."]
+visible = false
+offset_left = 316.0
+offset_top = 134.0
+offset_right = 529.0
+offset_bottom = 192.0
+theme_override_font_sizes/font_size = 42
+text = "game over"
+
 [connection signal="pressed" from="StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="RestartButton" to="." method="_on_restart_button_pressed"]

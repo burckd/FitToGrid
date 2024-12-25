@@ -14,3 +14,5 @@ unique_name_in_owner = true
 visible = false
 
 [connection signal="start_game" from="HUD" to="." method="new_game"]
+[connection signal="game_overed" from="GamePlay" to="." method="game_over"]
+[connection signal="game_overed" from="GamePlay" to="HUD" method="_on_game_play_game_overed"]
