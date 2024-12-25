@@ -146,3 +146,19 @@ func check_and_clear_lines():
 
 func is_cell_from_last_piece(grid_pos: Vector2) -> bool:
 	return grid_pos in last_piece_cells
+
+func validate_position_placement(piece_shape: Array, grid_pos: Vector2)-> bool:
+	for point in piece_shape:
+		var target_pos = grid_pos + point
+		if target_pos.x < 0 or target_pos.x >= grid_size or target_pos.y < 0 or target_pos.y >= grid_size:
+			return false
+		if grid_status.has(target_pos) and grid_status[target_pos]:
+			return false
+	return true
+
+func can_place_piece(piece_shape: Array) -> bool:
+	for x in range(grid_size):
+		for y in range(grid_size):
+			if validate_position_placement(piece_shape, Vector2(x, y)):
+				return true
+	return false
