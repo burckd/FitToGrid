@@ -16,7 +16,6 @@ func attempt_place_piece(piece: Node2D):
 		grid_manager.snap_piece_to_grid(piece)
 		grid_manager.mark_cells_occupied(piece)
 		piece.queue_free()
-		grid_manager.check_and_clear_lines()
 		spawn_manager.spawn_desired_piece(piece_number)
 		
 	else:
