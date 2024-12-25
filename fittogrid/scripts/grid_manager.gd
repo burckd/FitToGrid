@@ -10,6 +10,9 @@ var grid_offset = Global.GRID_OFFSET
 
 var highlighted_cells := []
 
+var last_placed_piece: Node2D = null
+var last_piece_cells: Array = []
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	init_grid(grid_size, cell_size)
@@ -60,12 +63,15 @@ func snap_piece_to_grid(piece: Node2D):
 	piece.global_position += delta
 
 func mark_cells_occupied(piece: Node2D):
+	last_placed_piece = piece
+	last_piece_cells.clear()
 	var cells_to_mark = get_cells_for_piece(piece)
 	for cell in cells_to_mark:
 		var grid_pos = world_to_grid(cell.position)
 		if grid_pos.x >= 0 and grid_pos.x < grid_size and grid_pos.y >= 0 and grid_pos.y < grid_size:
 			grid_status[grid_pos] = true
 			cell.set_state(1)
+			last_piece_cells.append(grid_pos)
 
 func highlight_cells(piece: Node2D):
 	clear_highlight()
@@ -126,10 +132,17 @@ func check_and_clear_lines():
 	for line in cleared_lines:
 		if line < grid_size:  # Row
 			for x in range(grid_size):
-				grid_status[Vector2(x, line)] = false
-				cells[x][line].set_state(0)
+				var grid_pos = Vector2(x, line)
+				if not is_cell_from_last_piece(grid_pos):
+					grid_status[grid_pos] = false
+					cells[x][line].set_state(0)
 		else:  # Column
 			for y in range(grid_size):
-				grid_status[Vector2(line - grid_size, y)] = false
-				cells[line - grid_size][y].set_state(0)
+				var grid_pos = Vector2(line - grid_size, y)
+				if not is_cell_from_last_piece(grid_pos):
+					grid_status[grid_pos] = false
+					cells[line - grid_size][y].set_state(0)
 	return cleared_lines
+
+func is_cell_from_last_piece(grid_pos: Vector2) -> bool:
+	return grid_pos in last_piece_cells
