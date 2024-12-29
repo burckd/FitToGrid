@@ -1,5 +1,7 @@
 extends Node2D
 
+@export var piece_scene: PackedScene 
+
 var cell_size = Global.CELL_SIZE
 var spawn_offset = Global.SPAWN_OFFSET
 
@@ -42,7 +44,7 @@ func spawn_single_piece(position: Vector2, piece_number) -> Node2D:
 	var chosen_piece_rotation_data = rotations[randi_range(0, rotations.size() - 1)]
 	
 	# instantiate piece and initiate it with shape
-	var piece_instance = preload("res://scenes/piece.tscn").instantiate()
+	var piece_instance = piece_scene.instantiate()
 	piece_instance.init_shape(chosen_piece_rotation_data,cell_size)
 	piece_instance.position = position
 	add_child(piece_instance)

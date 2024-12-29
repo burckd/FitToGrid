@@ -1,5 +1,7 @@
 extends Node2D
 
+@export var cell_scene: PackedScene 
+
 signal piece_released(piece)
 signal piece_hovered(piece)
 
@@ -27,7 +29,7 @@ func _process(delta):
 func init_shape(shape: Array, cell_size: int):
 	shape_data = shape
 	for point in shape_data:
-		var cell = preload("res://scenes/cell.tscn").instantiate()
+		var cell = cell_scene.instantiate()
 		add_child(cell)
 		cells.append(cell)
 		cell.position = Vector2(point.x * cell_size, point.y * cell_size)

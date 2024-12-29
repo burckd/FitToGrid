@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://dg7j2vqsg28kx"]
+[gd_scene load_steps=7 format=3 uid="uid://dg7j2vqsg28kx"]
 
 [ext_resource type="Script" path="res://scripts/game_play.gd" id="1_povau"]
 [ext_resource type="Script" path="res://scripts/grid_manager.gd" id="2_pfn10"]
 [ext_resource type="PackedScene" uid="uid://p27te7rhun5u" path="res://scenes/cell.tscn" id="3_gtsoi"]
 [ext_resource type="Script" path="res://scripts/spawn_manager.gd" id="3_tw5mj"]
 [ext_resource type="Script" path="res://scripts/piece_data.gd" id="4_ygsvh"]
+[ext_resource type="PackedScene" uid="uid://cbttpjkuhnw5l" path="res://scenes/piece.tscn" id="5_70eya"]
 
 [node name="GamePlay" type="Node2D"]
 script = ExtResource("1_povau")
@@ -15,6 +16,7 @@ cell_scene = ExtResource("3_gtsoi")
 
 [node name="SpawnManager" type="Node2D" parent="."]
 script = ExtResource("3_tw5mj")
+piece_scene = ExtResource("5_70eya")
 
 [node name="piece_data" type="Node" parent="SpawnManager"]
 script = ExtResource("4_ygsvh")
