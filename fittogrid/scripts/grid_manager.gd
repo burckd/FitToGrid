@@ -113,6 +113,7 @@ func grid_to_world(grid_pos: Vector2) -> Vector2:
 
 func check_and_clear_lines():
 	var cleared_lines = []
+	var cleared_line_power = 0
 	# Check rows
 	for y in range(grid_size):
 		var is_row_filled = true
@@ -131,6 +132,7 @@ func check_and_clear_lines():
 				break
 		if is_col_filled:
 			cleared_lines.append(x + grid_size)  # Offset column indices to differentiate
+	# print("Cleared lines are ", cleared_lines)
 	# Clear lines
 	for line in cleared_lines:
 		if line < grid_size:  # Row
@@ -138,13 +140,26 @@ func check_and_clear_lines():
 				var grid_pos = Vector2(x, line)
 				if not is_cell_from_last_piece(grid_pos):
 					grid_status[grid_pos] = false
+					
+					cleared_line_power = cells[x][line].power + cleared_line_power
+					cells[x][line].clear_cell_power()
+					
 					cells[x][line].set_state(0)
+				else:
+					cells[x][line].update_power(cleared_line_power)
 		else:  # Column
 			for y in range(grid_size):
 				var grid_pos = Vector2(line - grid_size, y)
 				if not is_cell_from_last_piece(grid_pos):
 					grid_status[grid_pos] = false
+					
+					cleared_line_power = cells[line - grid_size][y].power + cleared_line_power
+					cells[line - grid_size][y].clear_cell_power()
+					
 					cells[line - grid_size][y].set_state(0)
+				else:
+					cells[line - grid_size][y].update_power(cleared_line_power)
+	print("cleared lines ", cleared_lines)
 	return cleared_lines
 
 func is_cell_from_last_piece(grid_pos: Vector2) -> bool:
@@ -165,3 +180,6 @@ func can_place_piece(piece_shape: Array) -> bool:
 			if validate_position_placement(piece_shape, Vector2(x, y)):
 				return true
 	return false
+
+func power_up_cell(cell):
+	pass

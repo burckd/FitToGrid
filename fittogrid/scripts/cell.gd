@@ -8,10 +8,13 @@ signal input_taken
 @export var invalid_color := Color("red")          # Invalid placement highlight
 
 @onready var color_rect = $ColorRect
+@onready var power_label = $PowerLabel
 
 var state = 0  # 0 = empty, 1 = occupied
 var is_highlighted = false
 var is_invalid = false
+
+var power : int = 1
 
 func _ready():
 	update_color()
@@ -36,3 +39,12 @@ func set_highlight(highlight: bool, invalid: bool = false):
 
 func _on_cell_area_input_event(viewport, event, shape_idx):
 	input_taken.emit(viewport, event, shape_idx)
+
+func update_power(power_up: int):
+	power_label.show()
+	power += + power_up
+	power_label.text = str(power)
+
+func clear_cell_power():
+	power_label.hide()
+	power = 0

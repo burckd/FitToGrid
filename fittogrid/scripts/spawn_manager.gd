@@ -7,7 +7,7 @@ var spawn_offset = Global.SPAWN_OFFSET
 
 @onready var piece_data = $piece_data
 
-const MAX_PIECE_HEIGHT = 3 
+const MAX_PIECE_WIDTH = 3 
 const PIECE_COUNT = 3
 
 signal active_piece_information(piece)
@@ -23,8 +23,8 @@ func spawn_pieces():
 	var starting_x = spawn_offset.x # spawnable area x
 	
 	for i in range(PIECE_COUNT):
-		var spawn_y = starting_y + i * (MAX_PIECE_HEIGHT + 1) * cell_size
-		var spawn_x = starting_x
+		var spawn_y = starting_y 
+		var spawn_x = starting_x + i * (MAX_PIECE_WIDTH + 1) * cell_size
 		var piece = spawn_single_piece(Vector2(spawn_x, spawn_y), i)
 		first_active_pieces.append(piece)
 
@@ -32,8 +32,8 @@ func spawn_desired_piece(number) -> Node2D:
 	var starting_y = spawn_offset.y # center of spawnable area
 	var starting_x = spawn_offset.x # spawnable area x
 	var n = number
-	var spawn_y = starting_y + n * (MAX_PIECE_HEIGHT + 1) * cell_size
-	var spawn_x = starting_x
+	var spawn_y = starting_y
+	var spawn_x = starting_x + n * (MAX_PIECE_WIDTH + 1) * cell_size
 	return spawn_single_piece(Vector2(spawn_x, spawn_y), number)
 
 func spawn_single_piece(position: Vector2, piece_number) -> Node2D:
