@@ -5,6 +5,7 @@ extends Node2D
 
 var cell_size = Global.CELL_SIZE
 var grid_offset = Global.GRID_OFFSET
+var grid_top_offset = Global.GRID_TOP_OFFSET
 
 var grid_status := {}
 var cells := []
@@ -27,7 +28,7 @@ func init_grid(grid_size: int, cell_size: int):
 			# load cells
 			var cell_instance = cell_scene.instantiate()
 			# position cell
-			cell_instance.position = Vector2(x * cell_size + grid_offset, y * cell_size + grid_offset)
+			cell_instance.position = Vector2(x * cell_size + grid_offset, y * cell_size + grid_offset + grid_top_offset)
 			# add cell to scene 
 			add_child(cell_instance)
 			# all cells are empty
@@ -102,13 +103,13 @@ func clear_highlight():
 func world_to_grid(world_pos: Vector2) -> Vector2:
 	return Vector2(
 		int((world_pos.x - grid_offset) / cell_size),
-		int((world_pos.y - grid_offset) / cell_size)
+		int((world_pos.y - grid_offset - grid_top_offset) / cell_size)
 	)
 
 func grid_to_world(grid_pos: Vector2) -> Vector2:
 	return Vector2(
 		grid_pos.x * cell_size + grid_offset,
-		grid_pos.y * cell_size + grid_offset
+		grid_pos.y * cell_size + grid_offset + grid_top_offset
 	)
 
 func check_and_clear_lines():
