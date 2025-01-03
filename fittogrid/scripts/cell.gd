@@ -14,10 +14,11 @@ var state = 0  # 0 = empty, 1 = occupied
 var is_highlighted = false
 var is_invalid = false
 
-var power : int = 1
+var power : int = 0
 
 func _ready():
 	update_color()
+	update_power(0)
 
 func update_color():
 	if is_highlighted:
@@ -41,10 +42,29 @@ func _on_cell_area_input_event(viewport, event, shape_idx):
 	input_taken.emit(viewport, event, shape_idx)
 
 func update_power(power_up: int):
-	power_label.show()
 	power += + power_up
-	power_label.text = str(power)
+	cell_power_text_update(power)
 
 func clear_cell_power():
-	power_label.hide()
 	power = 0
+	cell_power_text_update(power)
+
+func cell_power_text_update(power):
+	if power <= 1:
+		power_label.hide()
+	elif power < 10:
+		power_label.show()
+		power_label.add_theme_color_override("font_color", Color(1, 1, 1))
+		power_label.text = str(power)
+	elif power >= 10:
+		power_label.show()
+		var power_visual: float
+		power_visual = power / 10
+		power_label.add_theme_color_override("font_color", Color(1, 0, 0))
+		power_label.text = str(int(power_visual))
+	elif power >= 100:
+		power_label.show()
+		var power_visual: float
+		power_visual = power / 10
+		power_label.add_theme_color_override("font_color", Color(0, 0, 0))
+		power_label.text = str(int(power_visual))

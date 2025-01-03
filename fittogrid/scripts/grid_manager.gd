@@ -75,6 +75,7 @@ func mark_cells_occupied(piece: Node2D):
 		if grid_pos.x >= 0 and grid_pos.x < grid_size and grid_pos.y >= 0 and grid_pos.y < grid_size:
 			grid_status[grid_pos] = true
 			cell.set_state(1)
+			cell.update_power(1)
 			last_piece_cells.append(grid_pos)
 
 func highlight_cells(piece: Node2D):
@@ -114,7 +115,6 @@ func grid_to_world(grid_pos: Vector2) -> Vector2:
 
 func check_and_clear_lines():
 	var cleared_lines = []
-	var cleared_line_power = 0
 	# Check rows
 	for y in range(grid_size):
 		var is_row_filled = true
@@ -133,7 +133,9 @@ func check_and_clear_lines():
 				break
 		if is_col_filled:
 			cleared_lines.append(x + grid_size)  # Offset column indices to differentiate
-	# print("Cleared lines are ", cleared_lines)
+	
+	var cleared_line_power = update_cleared_line_power(cleared_lines)
+	
 	# Clear lines
 	for line in cleared_lines:
 		if line < grid_size:  # Row
@@ -142,9 +144,7 @@ func check_and_clear_lines():
 				if not is_cell_from_last_piece(grid_pos):
 					grid_status[grid_pos] = false
 					
-					cleared_line_power = cells[x][line].power + cleared_line_power
 					cells[x][line].clear_cell_power()
-					
 					cells[x][line].set_state(0)
 				else:
 					cells[x][line].update_power(cleared_line_power)
@@ -154,13 +154,11 @@ func check_and_clear_lines():
 				if not is_cell_from_last_piece(grid_pos):
 					grid_status[grid_pos] = false
 					
-					cleared_line_power = cells[line - grid_size][y].power + cleared_line_power
 					cells[line - grid_size][y].clear_cell_power()
-					
 					cells[line - grid_size][y].set_state(0)
 				else:
 					cells[line - grid_size][y].update_power(cleared_line_power)
-	print("cleared lines ", cleared_lines)
+	print("cell power is ", cleared_line_power)
 	return cleared_lines
 
 func is_cell_from_last_piece(grid_pos: Vector2) -> bool:
@@ -182,5 +180,18 @@ func can_place_piece(piece_shape: Array) -> bool:
 				return true
 	return false
 
-func power_up_cell(cell):
-	pass
+func update_cleared_line_power(cleared_lines):
+	var cleared_line_power = 0
+	for line in cleared_lines:
+		if line < grid_size:  # Row
+			for x in range(grid_size):
+				var grid_pos = Vector2(x, line)
+				if not is_cell_from_last_piece(grid_pos):
+					cleared_line_power += cells[x][line].power
+		else:  # Column
+			for y in range(grid_size):
+				var grid_pos = Vector2(line - grid_size, y)
+				if not is_cell_from_last_piece(grid_pos):
+					cleared_line_power += cells[line - grid_size][y].power
+	print("cleared line power is ", cleared_line_power)
+	return cleared_line_power
